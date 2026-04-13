@@ -489,6 +489,7 @@ async function parseLogDataFromStream(stream: ReadableStream<Uint8Array>): Promi
  */
 export async function processArrayBuffer(buffer: ArrayBuffer): Promise<LogEntry[]> {
     if (isClpFile(buffer)) {
+        const entries: LogEntry[] = [];
         let reader: ClpArchiveReader | null = null;
         try {
             reader = await ClpArchiveReader.create(new Uint8Array(buffer));
@@ -504,20 +505,20 @@ export async function processArrayBuffer(buffer: ArrayBuffer): Promise<LogEntry[
                 }
                 entries.push(parsedLine);
             }
-
-            if (entries.length === 0) {
-                console.error("No valid JSON entries found in CLP archive");
-                throw new Error("No valid JSON entries found in CLP archive");
-            }
-
-            return entries;
         } catch (error) {
             console.error('Error decompressing or parsing clp stream:', error);
             const message = error instanceof Error ? error.message : String(error);
-            throw new Error(`Failed to process clp stream: ${message}`);
+            throw new Error(`Failed to process clp stream: ${message}`, { cause: error });
         } finally {
             reader?.close();
         }
+
+        if (entries.length === 0) {
+            console.error("No valid JSON entries found in CLP archive");
+            throw new Error("No valid JSON entries found in CLP archive");
+        }
+
+        return entries;
     } else if (isGzipFile(buffer)) {
         try {
             if (!('DecompressionStream' in window)) {

@@ -39,7 +39,7 @@ const DataSourceSelector: React.FC<DataSourceSelectorProps> = ({
     if (files && files.length > 0) {
       const file = files[0];
 
-      // Support NDJSON and compressed files only
+      // Support NDJSON, gzip-compressed files, or CLP archives only
       const fileName = file.name.toLowerCase();
       const isValidFile =
         fileName.endsWith(".ndjson") ||
@@ -51,7 +51,7 @@ const DataSourceSelector: React.FC<DataSourceSelectorProps> = ({
         setError(null);
         onFileSelected(file);
       } else {
-        setError("Please select an NDJSON, gzip-compressed, or CLP file");
+        setError("Please select an NDJSON, gzip-compressed file, or CLP archive.");
       }
     }
   };
