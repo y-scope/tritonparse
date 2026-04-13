@@ -51,7 +51,7 @@ const DataSourceSelector: React.FC<DataSourceSelectorProps> = ({
         setError(null);
         onFileSelected(file);
       } else {
-        setError("Please select an NDJSON or compressed file");
+        setError("Please select an NDJSON, gzip-compressed, or CLP file");
       }
     }
   };
@@ -120,7 +120,7 @@ const DataSourceSelector: React.FC<DataSourceSelectorProps> = ({
               type="url"
               value={url}
               onChange={(e) => setUrl(e.target.value)}
-              placeholder="Enter NDJSON file URL"
+              placeholder="Enter NDJSON, .gz, .clp URL"
               className="flex-1 p-2 border border-gray-300 rounded-l-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               disabled={isLoading}
             />
